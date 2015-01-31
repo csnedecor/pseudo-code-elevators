@@ -1,5 +1,5 @@
 class Elevator
-  attr_accessor :state
+  attr_accessor :state, :current_floor
   def initialize(state, current_floor)
     # where state is either "up", "down", or "standing"
     # and current_floor is an integer between 1 and 25

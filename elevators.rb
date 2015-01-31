@@ -16,44 +16,63 @@ states = ["up", "down", "standing"]
 6.times do
   elevators << Elevator.new(states.sample, rand(1..25))
 end
+
 puts "How many floors are waiting for elevators?"
 # For an actual elevator program, this information would be calculated as people
 # push the up or down buttons on each floor, but as we only have one command
 # line, not 25, we'll have to settle for getting this information up front.
 elevator_requests = gets.chomp.to_i
+while !elevator_requests.between?(1, 25)
+  puts "There are 25 stories in this building. Please enter an integer from 1 to 25."
+  elevator_requests = gets.chomp.to_i
+end
 counter = 1
 floor_requests = []
-
 
 while counter <= elevator_requests
   # Go through the following actions for every floor that has called an elevator.
   puts "What floor is person #{counter} on? (Enter a floor number from 1-25)"
   floor = gets.chomp.to_i
+  while !floor.between?(1, 25)
+    puts "There are 25 stories in this building. Please enter an integer from 1 to 25."
+    floor = gets.chomp.to_i
+  end
   puts "Does this person want to go up or down? (Enter 'up' or 'down')"
   direction = gets.chomp.downcase
-  binding.pry
+  while direction != "down" && direction != "up"
+    puts "Please enter either 'up' or 'down.'"
+    direction = gets.chomp.downcase
+  end
   floor_requests << {floor: floor, direction: direction}
   counter += 1
+
 end
 
-  # floor_requests.each do |floor_request|
-  #   elevators.each do |elevator|
-  #     if elevator.state == "standing" && elevator.current_floor == floor_request
-  #       puts "Elevator #{ elevators.index(elevator) + 1 } has arrived.
-  #       What floor do you want to go to?"
-  #         destination = gets.chomp
-  #         floor_requests - [floor_request]
-  #         if new_floor > floor
-  #           elevator.state = "up"
-  #         elsif new_floor < floor
-  #           elevator.state = "down"
-  #         else
-  #           elevator.state = "standing"
-  #         end
-  #         while elevator.current_floor < destination
-  #
-  #         end
-  #       end
+floor_requests.each do |floor_request|
+  elevators.each do |elevator|
+    if (elevator.state == "standing" ||
+      elevator.state == floor_request[:direction]) &&
+      elevator.current_floor == floor_request[:floor]
+      puts "Elevator #{ elevators.index(elevator) + 1 } has arrived for floor
+      #{floor_request[:floor]}'s request to go #{floor_request[:direction]}.
+      What floor do you want to go to?"
+      destination = gets.chomp
+      floor_requests - [floor_request]
+
+      if new_floor > floor
+        elevator.state = "up"
+      elsif new_floor < floor
+        elevator.state = "down"
+      else
+        elevator.state = "standing"
+      end
+
+      # while elevator.current_floor < destination
+      #
+      # end
+    end
+  end
+end
   #
   #       elevators.each do |elevator|
   #         if elevator.state == "standing" && elevator.current_floor == floor
